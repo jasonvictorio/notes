@@ -1,3 +1,4 @@
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
 import { Component, input, output, signal } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { MarkdownComponent } from 'ngx-markdown'
@@ -6,7 +7,9 @@ import type { Note } from '../notes'
 @Component({
   selector: 'app-note',
   templateUrl: './note.html',
-  imports: [FormsModule, MarkdownComponent],
+  imports: [FormsModule, MarkdownComponent, CdkDragHandle],
+  hostDirectives: [CdkDrag],
+  host: { class: 'note', '[class.note--edit]': 'isEditing()' },
 })
 export class NoteComponent {
   note = input.required<Note>()

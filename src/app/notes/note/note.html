@@ -1,9 +1,33 @@
-@if (isEditing()) {
-  <button type="button" (click)="onSave()">save</button>
-  <button type="button" (click)="onCancel()">cancel</button>
-  <textarea [(ngModel)]="markdownString"></textarea>
-} @else {
-  <markdown [data]="note().content" />
-  <button type="button" (click)="onEdit()">edit</button>
-  <button type="button" (click)="onDelete()">delete</button>
-}
+<div class="note-background"></div>
+
+<div class="note-header">
+  <div class="note-drag" cdkDragHandle></div>
+  <button
+    class="note-delete"
+    type="button"
+    (click)="onDelete()">
+  </button>
+  @if (isEditing()) {
+    <button
+      class="note-save"
+      type="button"
+      (click)="onSave()">
+      <!-- <span class="material-symbols-outlined">home</span> -->
+    </button>
+  } @else {
+    <button
+      class="note-edit"
+      type="button"
+      (click)="onEdit()">
+      <!-- <span class="material-symbols-outlined">edit_document</span> -->
+    </button>
+  }
+</div>
+
+<div class="note-body">
+  @if (isEditing()) {
+    <textarea [(ngModel)]="markdownString"></textarea>
+  } @else {
+    <markdown [data]="note().content" />
+  }
+</div>

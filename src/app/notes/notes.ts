@@ -31,6 +31,7 @@ const dummyNotes: Note[] = [
   imports: [NoteComponent],
   templateUrl: './notes.html',
   styleUrl: './notes.scss',
+  host: { class: 'notes' },
 })
 export class NotesComponent {
   notes = signal<Note[]>(dummyNotes)

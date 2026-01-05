@@ -1,1 +1,140 @@
-/* You can add global styles to this file, and also import other style files */
+*,
+::after,
+::before {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+// css reset above ends
+
+// google font import
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Material+Symbols+Outlined&family=Shadows+Into+Light+Two&display=swap');
+
+body {
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  position: relative;
+}
+
+button {
+  cursor: pointer;
+}
+
+markdown,
+textarea {
+  font-family: 'Shadows Into Light Two', cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1.5rem;
+  display: block;
+}
+
+.notes {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  background-image: linear-gradient(rgb(229, 231, 235) 1.6px, transparent 1.6px),
+    linear-gradient(90deg, rgb(229, 231, 235) 1.6px, transparent 1.6px);
+  background-size: 64px 64px;
+}
+
+.notes-add {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
+.note {
+  margin: 1rem;
+  display: inline-block;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.note-header,
+.note-background {
+  opacity: 0;
+  transition: all ease 350ms;
+
+  .note:hover &,
+  .note.note--edit & {
+    opacity: 1;
+  }
+}
+
+.note-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0px solid rgba(0, 0, 0, 0.07);
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), inset 2px 1px 4px rgba(0, 0, 0, 0.0588235294);
+  border-radius: 1rem;
+  opacity: 0;
+}
+
+.note-header {
+  position: relative;
+}
+
+.note-drag {
+  box-shadow: inset 0 2px 4px #0000000f;
+  background-color: rgb(249 250 251 / 0.8);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2rem;
+  z-index: 1;
+
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.note-save,
+.note-edit,
+.note-delete {
+  position: relative;
+  z-index: 10;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 100%;
+  padding: 0;
+  margin: 0.75em;
+  margin-right: -0.25em;
+}
+
+.note-edit {
+  background-color: rgb(39, 201, 63);
+}
+
+.note-save {
+  background-color: rgb(255, 189, 46);
+}
+
+.note-delete {
+  background-color: rgb(255, 95, 86);
+}
+
+.note-body {
+  padding: 1.5rem;
+  position: relative;
+}
