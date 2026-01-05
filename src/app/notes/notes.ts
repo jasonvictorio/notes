@@ -1,4 +1,5 @@
 import { Component, signal } from '@angular/core'
+import { nanoid } from 'nanoid'
 import { NoteComponent } from './note/note'
 
 export type Note = {
@@ -38,5 +39,14 @@ export class NotesComponent {
     this.notes.update((notes) =>
       notes.map((n) => (n.id !== note.id ? n : note)),
     )
+  }
+
+  onAdd() {
+    const newNote = { id: nanoid(), content: '' }
+    this.notes.update((notes) => [...notes, newNote])
+  }
+
+  onDelete(noteId: Note['id']) {
+    this.notes.update((notes) => notes.filter((n) => n.id !== noteId))
   }
 }

@@ -1,2 +1,8 @@
 @for (note of notes(); track note.id) {
-  <app-note [note]="note" (update)="onUpdate($event)" /> }
+  <app-note
+    [note]="note"
+    (update)="onUpdate($event)"
+    (delete)="onDelete($event)" />
+}
+
+<button type="button" (click)="onAdd()">Add new note</button>

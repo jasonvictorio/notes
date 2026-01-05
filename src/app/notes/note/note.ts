@@ -12,6 +12,7 @@ export class NoteComponent {
   note = input.required<Note>()
   markdownString = signal<string>('')
   update = output<Note>()
+  delete = output<Note['id']>()
   isEditing = signal<boolean>(false)
 
   onEdit() {
@@ -29,5 +30,9 @@ export class NoteComponent {
   onCancel() {
     this.isEditing.set(false)
     this.markdownString.set('')
+  }
+
+  onDelete() {
+    this.delete.emit(this.note().id)
   }
 }
