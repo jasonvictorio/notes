@@ -1,3 +1,2 @@
 @for (note of notes(); track note.id) {
-  <app-note [note]="note" />
-}
+  <app-note [note]="note" (update)="onUpdate($event)" /> }
