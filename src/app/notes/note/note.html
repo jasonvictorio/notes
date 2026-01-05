@@ -1,12 +1,9 @@
-<div>
-  {{ note() | json }}
-</div>
-
 @if (isEditing()) {
   <button type="button" (click)="onSave()">save</button>
   <button type="button" (click)="onCancel()">cancel</button>
   <textarea [(ngModel)]="markdownString"></textarea>
 } @else {
+  <markdown [data]="note().content" />
   <button type="button" (click)="onEdit()">edit</button>
   <button type="button" (click)="onDelete()">delete</button>
 }
