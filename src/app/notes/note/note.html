@@ -1,5 +1,5 @@
 <div class="note-header">
-  <div class="note-drag" cdkDragHandle></div>
+  <div class="note-drag" cdkDragHandle (mousedown)="onMousedown()" (mouseup)="onMouseup()"></div>
   <button
     class="note-delete"
     type="button"
@@ -22,8 +22,13 @@
 
 <div class="note-body">
   @if (isEditing()) {
-    <textarea [(ngModel)]="markdownString"></textarea>
+    <textarea
+      #textarea
+      [(ngModel)]="markdownString"
+      (ngModelChange)="onTextareaChange()"
+      [style.width.px]="markdownRect().width"
+      [style.height.px]="markdownRect().height"></textarea>
   } @else {
-    <markdown [data]="note().content" />
+    <markdown [data]="note().content" #markdown />
   }
 </div>

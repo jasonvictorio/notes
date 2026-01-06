@@ -1,5 +1,13 @@
 import { CdkDrag, type CdkDragEnd, CdkDragHandle } from '@angular/cdk/drag-drop'
-import { Component, input, output, signal } from '@angular/core'
+import {
+  Component,
+  type ElementRef,
+  effect,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { MarkdownComponent } from 'ngx-markdown'
 import type { Note } from '../notes'
@@ -31,16 +39,53 @@ export class NoteComponent {
   delete = output<Note['id']>()
   isEditing = signal<boolean>(false)
   isDragging = signal<boolean>(false)
+  textarea = viewChild<ElementRef<HTMLTextAreaElement>>('textarea')
+  markdown = viewChild<MarkdownComponent>('markdown')
+  markdownRect = signal({ width: 0, height: 0 })
+
+  constructor() {
+    effect(() => {
+      if (!this.isEditing() || !this.markdown()) return
+      this.onShowTextarea()
+    })
+  }
+
+  onShowTextarea() {
+    const markdownRect =
+      this.markdown()?.element.nativeElement.getBoundingClientRect()
+    this.markdownRect.set({
+      width: markdownRect?.width || 0,
+      height: markdownRect?.height || 0,
+    })
+  }
+
+  onTextareaChange() {
+    const textareaElement = this.textarea()?.nativeElement
+    if (!textareaElement) return
+    const height =
+      this.markdownRect().height > textareaElement.scrollHeight
+        ? this.markdownRect().height
+        : textareaElement.scrollHeight
+    textareaElement.style.height = 'auto'
+    textareaElement.style.height = `${height}px`
+    textareaElement.focus()
+  }
 
   onEdit() {
     this.isEditing.set(true)
     const content = this.note().content
     this.markdownString.set(content)
+    setTimeout(() => {
+      this.onTextareaChange()
+    }, 0)
   }
 
   onSave() {
     this.isEditing.set(false)
-    const updatedNote = { ...this.note(), content: this.markdownString() }
+    const updatedNote = {
+      ...this.note(),
+      content: this.markdownString().trim(),
+    }
     this.update.emit(updatedNote)
   }
 
@@ -51,6 +96,14 @@ export class NoteComponent {
 
   onDelete() {
     this.delete.emit(this.note().id)
+  }
+
+  onMousedown() {
+    this.isDragging.set(true)
+  }
+
+  onMouseup() {
+    this.isDragging.set(false)
   }
 
   onDragStart() {
