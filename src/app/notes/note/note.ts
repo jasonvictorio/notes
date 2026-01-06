@@ -62,11 +62,17 @@ export class NoteComponent {
   onTextareaChange() {
     const textareaElement = this.textarea()?.nativeElement
     if (!textareaElement) return
-    const height =
-      this.markdownRect().height > textareaElement.scrollHeight
-        ? this.markdownRect().height
-        : textareaElement.scrollHeight
-    textareaElement.style.height = 'auto'
+    const width = Math.max(
+      this.markdownRect().width,
+      textareaElement.scrollWidth,
+      textareaElement.clientWidth,
+    )
+    const height = Math.max(
+      this.markdownRect().height,
+      textareaElement.scrollHeight,
+      textareaElement.clientHeight,
+    )
+    textareaElement.style.width = `${width}px`
     textareaElement.style.height = `${height}px`
     textareaElement.focus()
   }

@@ -187,6 +187,10 @@ textarea {
 
 textarea {
   outline: 0;
+  width: auto;
+  height: auto;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 markdown {
