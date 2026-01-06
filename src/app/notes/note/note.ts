@@ -1,7 +1,9 @@
 import { CdkDrag, type CdkDragEnd, CdkDragHandle } from '@angular/cdk/drag-drop'
 import {
+  type AfterViewInit,
   Component,
   type ElementRef,
+  type OnInit,
   effect,
   input,
   output,
@@ -32,7 +34,7 @@ import type { Note } from '../notes'
     '(cdkDragEnded)': 'onDragEnd($event)',
   },
 })
-export class NoteComponent {
+export class NoteComponent implements OnInit, AfterViewInit {
   note = input.required<Note>()
   markdownString = signal<string>('')
   update = output<Note>()
@@ -42,6 +44,17 @@ export class NoteComponent {
   textarea = viewChild<ElementRef<HTMLTextAreaElement>>('textarea')
   markdown = viewChild<MarkdownComponent>('markdown')
   markdownRect = signal({ width: 0, height: 0 })
+
+  ngOnInit() {
+    if (this.note().content === '*empty*') {
+      this.markdownString.set('')
+      this.isEditing.set(true)
+    }
+  }
+
+  ngAfterViewInit() {
+    this.textarea()?.nativeElement.focus()
+  }
 
   constructor() {
     effect(() => {
@@ -87,6 +100,8 @@ export class NoteComponent {
   }
 
   onSave() {
+    if (this.markdownString() === '') return this.onDelete()
+
     this.isEditing.set(false)
     const updatedNote = {
       ...this.note(),

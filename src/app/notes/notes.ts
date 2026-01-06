@@ -1,3 +1,4 @@
+import { CdkDrag } from '@angular/cdk/drag-drop'
 import { Component, HostListener, signal } from '@angular/core'
 import { nanoid } from 'nanoid'
 import { dummyNotes } from './dummy_notes'
@@ -12,7 +13,7 @@ export type Note = {
 
 @Component({
   selector: 'app-notes',
-  imports: [NoteComponent],
+  imports: [NoteComponent, CdkDrag],
   templateUrl: './notes.html',
   host: {
     class: 'notes',
@@ -27,11 +28,14 @@ export class NotesComponent {
   styleBackgroundPosition = signal('0px 0px')
   offset = signal({ x: 0, y: 0 })
   abortController?: AbortController
+  focusedElement?: HTMLElement
 
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: MouseEvent) {
     if (event.button !== 1) return
 
+    this.focusedElement = document.activeElement as HTMLElement
+    this.focusedElement.blur()
     event.preventDefault()
     this.isPanning.set(true)
     this.abortController = new AbortController()
@@ -57,6 +61,9 @@ export class NotesComponent {
 
     this.isPanning.set(false)
     this.abortController?.abort()
+    setTimeout(() => {
+      this.focusedElement?.focus()
+    }, 0)
   }
 
   onUpdate(note: Note) {
@@ -68,11 +75,15 @@ export class NotesComponent {
       note,
     ]
     this.notes.set(newNotes)
-    this.saveNotes()
   }
 
   onAdd() {
-    const newNote = { id: nanoid(), content: '*empty*', x: 75, y: 75 }
+    const newNote = {
+      id: nanoid(),
+      content: '*empty*',
+      x: 75 - this.offset().x,
+      y: 75 - this.offset().y,
+    }
     this.notes.update((notes) => [...notes, newNote])
   }
 

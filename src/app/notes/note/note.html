@@ -24,10 +24,9 @@
   @if (isEditing()) {
     <textarea
       #textarea
+      placeholder="Write here"
       [(ngModel)]="markdownString"
-      (ngModelChange)="onTextareaChange()"
-      [style.width.px]="markdownRect().width"
-      [style.height.px]="markdownRect().height"></textarea>
+      (ngModelChange)="onTextareaChange()"></textarea>
   } @else {
     <markdown [data]="note().content" #markdown />
   }
