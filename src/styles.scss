@@ -52,6 +52,11 @@ textarea {
   background-image: linear-gradient(rgb(229, 231, 235) 1.6px, transparent 1.6px),
     linear-gradient(90deg, rgb(229, 231, 235) 1.6px, transparent 1.6px);
   background-size: 64px 64px;
+  overflow: hidden;
+}
+
+.notes--panning {
+  cursor: grabbing;
 }
 
 .notes-add {
