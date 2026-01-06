@@ -30,6 +30,7 @@ body {
   font-weight: 400;
   font-style: normal;
   position: relative;
+  color: #414141;
 }
 
 button {
@@ -186,6 +187,51 @@ textarea {
 
 textarea {
   outline: 0;
+}
+
+markdown {
+  > * {
+    margin-bottom: 1rem;
+  }
+
+  ol {
+    list-style: decimal inside none;
+  }
+
+  ul {
+    list-style: '* ' inside none;
+  }
+
+  em {
+    font-style: normal;
+    position: relative;
+    display: inline-block;
+    text-decoration: underline;
+  }
+
+  del {
+    background-color: #fef08a;
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 110%;
+      height: 100%;
+      background-color: inherit;
+      margin-left: -5%;
+      z-index: -1;
+      border-radius: 0.25em;
+    }
+  }
+
+  pre[class*='language-'] {
+    font-size: 1rem;
+    border-radius: 0.5em;
+  }
 }
 
 .note-body {
