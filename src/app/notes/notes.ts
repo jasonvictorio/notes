@@ -40,7 +40,6 @@ const dummyNotes: Note[] = [
   selector: 'app-notes',
   imports: [NoteComponent],
   templateUrl: './notes.html',
-  styleUrl: './notes.scss',
   host: {
     class: 'notes',
     '[class.notes--panning]': 'isPanning()',

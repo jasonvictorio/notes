@@ -1,3 +1,14 @@
+<div class="notes-header">
+  <h1 class="notes-title">Infinity Notes</h1>
+  <button
+    class="notes-add"
+    type="button"
+    (click)="onAdd()">
+    <span class="material-symbols-outlined icon">add</span>
+    New note
+  </button>
+</div>
+
 <div class="notes-canvas" [style.transform]="styleTransform()">
   @for (note of notes(); track note.id) {
     <app-note
@@ -5,11 +16,4 @@
       (update)="onUpdate($event)"
       (delete)="onDelete($event)" />
   }
-
-  <button
-    class="notes-add"
-    type="button"
-    (click)="onAdd()">
-    Add new note
-  </button>
 </div>

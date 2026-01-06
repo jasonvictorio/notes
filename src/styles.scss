@@ -59,10 +59,45 @@ textarea {
   cursor: grabbing;
 }
 
+.notes-header {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  gap: 1rem;
+  top: 2rem;
+  left: 2rem;
+  border-radius: 0.5rem;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(229 231 235);
+  z-index: 100;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.notes-title {
+  font-size: 1rem;
+}
+
 .notes-add {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
+  background-color: rgb(79 70 229);
+  color: rgb(255, 255, 255);
+  display: flex;
+  align-items: center;
+  border-radius: 0.75em;
+  padding: 0.5em 0.75em;
+  font-size: 0.75rem;
+  font-weight: bold;
+  transition: all ease 150ms;
+
+  .icon {
+    font-size: 1em;
+    font-weight: bold;
+    margin-right: 0.25em;
+  }
+}
+
+.notes-add:hover {
+  background-color: rgb(67 56 202);
 }
 
 .note {
@@ -70,51 +105,33 @@ textarea {
   display: inline-block;
   position: absolute;
   background-color: rgba(255, 255, 255, 0);
+  border-radius: 1rem;
+  transition: all ease 350ms, transform ease 0ms, top ease 0ms, left ease 0ms, z-index ease 0ms;
+  border: 1px solid transparent;
 }
 
-.note-header,
-.note-background {
-  opacity: 0;
-  transition: all ease 350ms;
-
+.note-header {
   .note:hover &,
   .note.note--edit & {
     opacity: 1;
   }
 }
 
-.note:hover {
-  z-index: 1000;
-}
-
+.note:hover,
 .note--edit {
-  z-index: 2000;
-}
-
-// NOTE: dodgy class to overule .note:hover specificity
-.note--drag.note {
-  z-index: 3000;
-}
-
-.note-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0px solid rgba(0, 0, 0, 0.07);
+  opacity: 1;
+  border: 1px solid rgba(0, 0, 0, 0.07);
   background-color: rgba(255, 255, 255, 1);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), inset 2px 1px 4px rgba(0, 0, 0, 0.0588235294);
-  border-radius: 1rem;
-  opacity: 0;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 .note-header {
   position: relative;
+  opacity: 0;
+  transition: all ease 350ms;
 }
 
 .note-drag {
-  box-shadow: inset 0 2px 4px #0000000f;
   background-color: rgb(249 250 251 / 0.8);
   position: absolute;
   top: 0;
@@ -124,7 +141,11 @@ textarea {
   z-index: 1;
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
-  cursor: grabbing;
+  cursor: grab;
+
+  .note--drag & {
+    cursor: grabbing;
+  }
 }
 
 .note-save,
@@ -138,21 +159,45 @@ textarea {
   padding: 0;
   margin: 0.75em;
   margin-right: -0.25em;
+  transition: all ease 150ms;
 }
 
 .note-edit {
   background-color: rgb(39, 201, 63);
+
+  &:hover {
+    background-color: rgb(29, 148, 47);
+  }
 }
 
 .note-save {
   background-color: rgb(255, 189, 46);
+  &:hover {
+    background-color: rgb(184, 139, 44);
+  }
 }
 
 .note-delete {
   background-color: rgb(255, 95, 86);
+  &:hover {
+    background-color: rgb(226, 99, 92);
+  }
 }
 
 .note-body {
   padding: 1.5rem;
   position: relative;
+}
+
+.note:hover {
+  z-index: 2000;
+}
+
+.note--edit {
+  z-index: 1000;
+}
+
+// NOTE: dodgy class to overule .note:hover specificity
+.note--drag.note--drag {
+  z-index: 3000;
 }
