@@ -52,36 +52,37 @@ export class NotesComponent {
   styleTransform = signal('translate(0px, 0px)')
   styleBackgroundPosition = signal('0px 0px')
   offset = signal({ x: 0, y: 0 })
+  abortController?: AbortController
 
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: MouseEvent) {
-    if (event.button === 1) {
-      event.preventDefault()
-      this.isPanning.set(true)
-    }
+    if (event.button !== 1) return
+
+    event.preventDefault()
+    this.isPanning.set(true)
+    this.abortController = new AbortController()
+    const { signal } = this.abortController
+    window.addEventListener('mousemove', (e) => this.onMouseMove(e), { signal })
+    window.addEventListener('mouseup', (e) => this.onMouseUp(e), { signal })
   }
 
-  // TODO: remove "always" listener
-  @HostListener('window:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
     if (!this.isPanning()) return
 
     this.offset.update((p) => {
-      const newX = p.x + event.movementX
-      const newY = p.y + event.movementY
-      this.styleBackgroundPosition.set(`${newX}px ${newY}px`)
-      this.styleTransform.set(`translate(${newX}px, ${newY}px)`)
-      return { x: newX, y: newY }
+      const x = p.x + event.movementX
+      const y = p.y + event.movementY
+      this.styleBackgroundPosition.set(`${x}px ${y}px`)
+      this.styleTransform.set(`translate(${x}px, ${y}px)`)
+      return { x, y }
     })
   }
 
-  // TODO: remove "always" listener
-  @HostListener('window:mouseup', ['$event'])
   onMouseUp(event: MouseEvent) {
-    console.log('mouseup', event.button)
-    if (event.button === 1) {
-      this.isPanning.set(false)
-    }
+    if (event.button !== 1) return
+
+    this.isPanning.set(false)
+    this.abortController?.abort()
   }
 
   onUpdate(note: Note) {
