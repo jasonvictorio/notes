@@ -5,24 +5,34 @@ import { NoteComponent } from './note/note'
 export type Note = {
   id: string // nanoid
   content: string // markdown string
+  x: number
+  y: number
 }
 
 const dummyNotes: Note[] = [
   {
     id: 'V1StGXR8_Z5jdHi6B-myT',
     content: '# First Note\n- Okayish **Signal-based** Todo app\n- new line',
+    x: 100,
+    y: 100,
   },
   {
     id: '6f_dfX89-Z0Pq_L49mX2b',
     content: '## Reminders\nFinish this project.',
+    x: 200,
+    y: 200,
   },
   {
     id: 'p7L_kM32_j9vR_N12pY5q',
     content: '### Code Snippet\n```typescript\nconst count = signal(0);\n```',
+    x: 300,
+    y: 300,
   },
   {
     id: 'kL0_mN45_p2xZ_Q98tW1v',
     content: 'Another one',
+    x: 400,
+    y: 400,
   },
 ]
 
@@ -82,7 +92,7 @@ export class NotesComponent {
   }
 
   onAdd() {
-    const newNote = { id: nanoid(), content: '' }
+    const newNote = { id: nanoid(), content: '', x: 75, y: 75 }
     this.notes.update((notes) => [...notes, newNote])
   }
 

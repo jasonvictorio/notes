@@ -68,7 +68,7 @@ textarea {
 .note {
   margin: 1rem;
   display: inline-block;
-  position: relative;
+  position: absolute;
   background-color: rgba(255, 255, 255, 0);
 }
 
@@ -81,6 +81,19 @@ textarea {
   .note.note--edit & {
     opacity: 1;
   }
+}
+
+.note:hover {
+  z-index: 1000;
+}
+
+.note--edit {
+  z-index: 2000;
+}
+
+// NOTE: dodgy class to overule .note:hover specificity
+.note--drag.note {
+  z-index: 3000;
 }
 
 .note-background {
@@ -109,9 +122,9 @@ textarea {
   width: 100%;
   height: 2rem;
   z-index: 1;
-
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
+  cursor: grabbing;
 }
 
 .note-save,

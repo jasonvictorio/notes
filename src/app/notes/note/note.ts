@@ -1,4 +1,4 @@
-import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop'
+import { CdkDrag, type CdkDragEnd, CdkDragHandle } from '@angular/cdk/drag-drop'
 import { Component, input, output, signal } from '@angular/core'
 import { FormsModule } from '@angular/forms'
 import { MarkdownComponent } from 'ngx-markdown'
@@ -8,8 +8,21 @@ import type { Note } from '../notes'
   selector: 'app-note',
   templateUrl: './note.html',
   imports: [FormsModule, MarkdownComponent, CdkDragHandle],
-  hostDirectives: [CdkDrag],
-  host: { class: 'note', '[class.note--edit]': 'isEditing()' },
+  hostDirectives: [
+    {
+      directive: CdkDrag,
+      outputs: ['cdkDragStarted', 'cdkDragEnded'],
+    },
+  ],
+  host: {
+    class: 'note',
+    '[class.note--edit]': 'isEditing()',
+    '[class.note--drag]': 'isDragging()',
+    '[style.top.px]': 'note().y',
+    '[style.left.px]': 'note().x',
+    '(cdkDragStarted)': 'onDragStart()',
+    '(cdkDragEnded)': 'onDragEnd($event)',
+  },
 })
 export class NoteComponent {
   note = input.required<Note>()
@@ -17,6 +30,7 @@ export class NoteComponent {
   update = output<Note>()
   delete = output<Note['id']>()
   isEditing = signal<boolean>(false)
+  isDragging = signal<boolean>(false)
 
   onEdit() {
     this.isEditing.set(true)
@@ -37,5 +51,22 @@ export class NoteComponent {
 
   onDelete() {
     this.delete.emit(this.note().id)
+  }
+
+  onDragStart() {
+    this.isDragging.set(true)
+  }
+
+  onDragEnd(event: CdkDragEnd) {
+    const { x, y } = event.distance
+    const note = this.note()
+    this.update.emit({
+      ...note,
+      x: note.x + x,
+      y: note.y + y,
+    })
+
+    event.source.reset()
+    this.isDragging.set(false)
   }
 }
