@@ -1,40 +1,14 @@
 import { Component, HostListener, signal } from '@angular/core'
 import { nanoid } from 'nanoid'
+import { dummyNotes } from './dummy_notes'
 import { NoteComponent } from './note/note'
 
 export type Note = {
-  id: string // nanoid
-  content: string // markdown string
+  id: string
+  content: string
   x: number
   y: number
 }
-
-const dummyNotes: Note[] = [
-  {
-    id: 'V1StGXR8_Z5jdHi6B-myT',
-    content: '# First Note\n- Okayish **Signal-based** Todo app\n- new line',
-    x: 100,
-    y: 100,
-  },
-  {
-    id: '6f_dfX89-Z0Pq_L49mX2b',
-    content: '## Reminders\nFinish this project.',
-    x: 200,
-    y: 200,
-  },
-  {
-    id: 'p7L_kM32_j9vR_N12pY5q',
-    content: '### Code Snippet\n```typescript\nconst count = signal(0);\n```',
-    x: 300,
-    y: 300,
-  },
-  {
-    id: 'kL0_mN45_p2xZ_Q98tW1v',
-    content: 'Another one',
-    x: 400,
-    y: 400,
-  },
-]
 
 @Component({
   selector: 'app-notes',
@@ -86,13 +60,19 @@ export class NotesComponent {
   }
 
   onUpdate(note: Note) {
-    this.notes.update((notes) =>
-      notes.map((n) => (n.id !== note.id ? n : note)),
-    )
+    const notes = this.notes()
+    const noteIndex = notes.findIndex((n) => n.id === note.id)
+    const newNotes = [
+      ...notes.slice(0, noteIndex),
+      ...notes.slice(noteIndex + 1),
+      note,
+    ]
+    this.notes.set(newNotes)
+    this.saveNotes()
   }
 
   onAdd() {
-    const newNote = { id: nanoid(), content: '', x: 75, y: 75 }
+    const newNote = { id: nanoid(), content: '*empty*', x: 75, y: 75 }
     this.notes.update((notes) => [...notes, newNote])
   }
 
