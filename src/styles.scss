@@ -21,7 +21,7 @@ select {
 // css reset above ends
 
 // google font import
-@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Material+Symbols+Outlined&family=Shadows+Into+Light+Two&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap');
 
 body {
   font-size: 16px;
@@ -47,11 +47,11 @@ textarea {
 }
 
 .notes {
+  background-color: #fefefe;
   display: block;
   width: 100vw;
   height: 100vh;
-  background-image: linear-gradient(rgb(242, 243, 245) 1.6px, transparent 1.6px),
-    linear-gradient(90deg, rgb(242, 243, 245) 1.6px, transparent 1.6px);
+  background-image: radial-gradient(circle, #d0d0d0 1px, transparent 1px);
   background-size: 32px 32px;
   overflow: hidden;
 }
@@ -194,6 +194,7 @@ textarea {
 }
 
 markdown {
+  white-space: nowrap;
   > * {
     margin-bottom: 1rem;
   }
