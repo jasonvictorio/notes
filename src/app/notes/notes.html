@@ -9,11 +9,13 @@
   </button>
 </div>
 
-<div class="notes-canvas" [style.transform]="styleTransform()">
-  @for (note of notes(); track note.id) {
-    <app-note
-      [note]="note"
-      (update)="onUpdate($event)"
-      (delete)="onDelete($event)" />
-  }
-</div>
+@if (isBrowser()) {
+  <div class="notes-canvas" [style.transform]="styleTransform()">
+    @for (note of notes(); track note.id) {
+      <app-note
+        [note]="note"
+        (update)="onUpdate($event)"
+        (delete)="onDelete($event)" />
+    }
+  </div>
+}

@@ -1,5 +1,13 @@
 import { CdkDrag } from '@angular/cdk/drag-drop'
-import { Component, HostListener, signal } from '@angular/core'
+import { isPlatformBrowser } from '@angular/common'
+import {
+  Component,
+  HostListener,
+  PLATFORM_ID,
+  computed,
+  inject,
+  signal,
+} from '@angular/core'
 import { nanoid } from 'nanoid'
 import { dummyNotes } from './dummy_notes'
 import { NoteComponent } from './note/note'
@@ -29,6 +37,12 @@ export class NotesComponent {
   offset = signal({ x: 0, y: 0 })
   abortController?: AbortController
   focusedElement?: HTMLElement
+  platformId = inject(PLATFORM_ID)
+  isBrowser = computed(() => isPlatformBrowser(this.platformId))
+
+  ngOnInit() {
+    this.fetchFromLocalStorage()
+  }
 
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: MouseEvent) {
@@ -75,6 +89,7 @@ export class NotesComponent {
       note,
     ]
     this.notes.set(newNotes)
+    this.saveToLocalStorage(newNotes)
   }
 
   onAdd() {
@@ -89,5 +104,33 @@ export class NotesComponent {
 
   onDelete(noteId: Note['id']) {
     this.notes.update((notes) => notes.filter((n) => n.id !== noteId))
+    this.saveToLocalStorage(this.notes())
+  }
+
+  browserSafe(fn: () => void) {
+    if (!isPlatformBrowser(this.platformId)) return
+    try {
+      fn()
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  fetchFromLocalStorage() {
+    this.browserSafe(() => {
+      const notesLocal = JSON.parse(
+        localStorage.getItem('notes') || '',
+      ) as Note[]
+      if (notesLocal.length) {
+        this.notes.set(notesLocal)
+      }
+    })
+  }
+
+  saveToLocalStorage(notes: Note[]) {
+    this.browserSafe(() => {
+      if (!isPlatformBrowser(this.platformId)) return
+      localStorage.setItem('notes', JSON.stringify(notes))
+    })
   }
 }
