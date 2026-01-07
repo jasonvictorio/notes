@@ -81,15 +81,8 @@ export class NotesComponent {
   }
 
   onUpdate(note: Note) {
-    const notes = this.notes()
-    const noteIndex = notes.findIndex((n) => n.id === note.id)
-    const newNotes = [
-      ...notes.slice(0, noteIndex),
-      ...notes.slice(noteIndex + 1),
-      note,
-    ]
-    this.notes.set(newNotes)
-    this.saveToLocalStorage(newNotes)
+    this.notes.set(this.notes().map((n) => (n.id !== note.id ? n : note)))
+    this.saveToLocalStorage(this.notes())
   }
 
   onAdd() {

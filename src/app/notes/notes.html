@@ -13,6 +13,8 @@
   <div class="notes-canvas" [style.transform]="styleTransform()">
     @for (note of notes(); track note.id) {
       <app-note
+        animate.enter="enter"
+        animate.leave="leave"
         [note]="note"
         (update)="onUpdate($event)"
         (delete)="onDelete($event)" />
