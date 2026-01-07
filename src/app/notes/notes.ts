@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  NgZone,
   type OnDestroy,
   PLATFORM_ID,
   computed,
@@ -45,6 +46,9 @@ export class NotesComponent implements OnDestroy {
   platformId = inject(PLATFORM_ID)
   isBrowser = computed(() => isPlatformBrowser(this.platformId))
   hostElement = inject(ElementRef)
+  lastTouchPosition = signal<Position | null>(null)
+  rafId = signal<number>(0)
+  ngZone = inject(NgZone)
 
   ngOnInit() {
     this.fetchFromLocalStorage()
@@ -161,5 +165,65 @@ export class NotesComponent implements OnDestroy {
   ngOnDestroy() {
     this.abortController?.abort()
     this.abortController = undefined
+  }
+
+  @HostListener('touchstart', ['$event'])
+  onTouchStart(event: TouchEvent) {
+    if (event.target !== this.hostElement.nativeElement) return
+    if (event.touches.length !== 1) return
+
+    const touch = event.touches[0]
+    this.lastTouchPosition.set({ x: touch.clientX, y: touch.clientY })
+    this.isPanning.set(true)
+
+    this.abortController = new AbortController()
+    const { signal } = this.abortController
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('touchmove', (e) => this.onTouchMove(e), {
+        signal,
+        passive: false,
+      })
+      window.addEventListener('touchend', () => this.onTouchEnd(), { signal })
+      window.addEventListener('touchcancel', () => this.onTouchEnd(), {
+        signal,
+      })
+    })
+  }
+
+  onTouchMove(event: TouchEvent) {
+    if (event.touches.length !== 1 || !this.lastTouchPosition()) return
+
+    event.preventDefault()
+    const touch = event.touches[0]
+    const movementX = touch.clientX - (this.lastTouchPosition()?.x ?? 0)
+    const movementY = touch.clientY - (this.lastTouchPosition()?.y ?? 0)
+
+    if (!this.rafId()) {
+      this.rafId.set(
+        requestAnimationFrame(() => {
+          this.position.update((p) => {
+            const x = p.x + movementX
+            const y = p.y + movementY
+            this.updateStyleOffset({ x, y })
+            return { x, y }
+          })
+          this.rafId.set(0)
+        }),
+      )
+    }
+
+    this.lastTouchPosition.set({ x: touch.clientX, y: touch.clientY })
+  }
+
+  onTouchEnd() {
+    this.ngZone.run(() => {
+      this.lastTouchPosition.set(null)
+      this.onMouseUp()
+    })
+
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId())
+      this.rafId.set(0)
+    }
   }
 }

@@ -149,6 +149,14 @@ textarea {
   }
 }
 
+.note-drag {
+  pointer-events: none;
+
+  .note:hover & {
+    pointer-events: auto;
+  }
+}
+
 .note-save,
 .note-edit,
 .note-delete {
