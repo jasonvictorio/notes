@@ -39,6 +39,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
   markdownString = signal<string>('')
   update = output<Note>()
   delete = output<Note['id']>()
+  drag = output<boolean>()
   isEditing = signal<boolean>(false)
   isDragging = signal<boolean>(false)
   textarea = viewChild<ElementRef<HTMLTextAreaElement>>('textarea')
@@ -125,6 +126,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
 
   onDragStart() {
     this.isDragging.set(true)
+    this.drag.emit(true)
   }
 
   onDragEnd(event: CdkDragEnd) {
@@ -138,6 +140,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
 
     event.source.reset()
     this.isDragging.set(false)
+    this.drag.emit(false)
   }
 
   onBlur() {

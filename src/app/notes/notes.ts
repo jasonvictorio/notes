@@ -49,6 +49,7 @@ export class NotesComponent implements OnDestroy {
   lastTouchPosition = signal<Position | null>(null)
   rafId = signal<number>(0)
   ngZone = inject(NgZone)
+  isDragging = signal(false)
 
   ngOnInit() {
     this.fetchFromLocalStorage()
@@ -169,7 +170,6 @@ export class NotesComponent implements OnDestroy {
 
   @HostListener('touchstart', ['$event'])
   onTouchStart(event: TouchEvent) {
-    if (event.target !== this.hostElement.nativeElement) return
     if (event.touches.length !== 1) return
 
     const touch = event.touches[0]
@@ -192,6 +192,7 @@ export class NotesComponent implements OnDestroy {
 
   onTouchMove(event: TouchEvent) {
     if (event.touches.length !== 1 || !this.lastTouchPosition()) return
+    if (this.isDragging()) return
 
     event.preventDefault()
     const touch = event.touches[0]
