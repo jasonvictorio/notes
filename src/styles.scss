@@ -162,34 +162,58 @@ textarea {
 .note-delete {
   position: relative;
   z-index: 10;
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 100%;
-  padding: 0;
-  margin: 0.75em;
-  margin-right: -0.25em;
+  width: 1.5em;
+  height: 2rem;
   transition: all ease 150ms;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+
+  &::after {
+    content: '';
+    border-radius: 100%;
+    width: 0.75em;
+    height: 0.75em;
+    background-color: pink;
+    display: block;
+  }
 }
 
 .note-edit {
-  background-color: rgb(39, 201, 63);
+  &::after {
+    background-color: rgb(39, 201, 63);
+  }
 
   &:hover {
-    background-color: rgb(29, 148, 47);
+    &::after {
+      background-color: rgb(29, 148, 47);
+    }
   }
 }
 
 .note-save {
-  background-color: rgb(255, 189, 46);
+  &::after {
+    background-color: rgb(255, 189, 46);
+  }
+
   &:hover {
-    background-color: rgb(184, 139, 44);
+    &::after {
+      background-color: rgb(184, 139, 44);
+    }
   }
 }
 
 .note-delete {
-  background-color: rgb(255, 95, 86);
+  margin-left: 0.5rem;
+  &::after {
+    background-color: rgb(255, 95, 86);
+  }
+
   &:hover {
-    background-color: rgb(226, 99, 92);
+    &::after {
+      background-color: rgb(226, 99, 92);
+    }
   }
 }
 
