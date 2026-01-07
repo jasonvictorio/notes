@@ -44,6 +44,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
   textarea = viewChild<ElementRef<HTMLTextAreaElement>>('textarea')
   markdown = viewChild<MarkdownComponent>('markdown')
   markdownRect = signal({ width: 0, height: 0 })
+  isParentPanning = input(false)
 
   ngOnInit() {
     if (this.note().content === '*empty*') {
@@ -110,11 +111,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
     this.update.emit(updatedNote)
   }
 
-  onCancel() {
-    this.isEditing.set(false)
-    this.markdownString.set('')
-  }
-
   onDelete() {
     this.delete.emit(this.note().id)
   }
@@ -142,5 +138,16 @@ export class NoteComponent implements OnInit, AfterViewInit {
 
     event.source.reset()
     this.isDragging.set(false)
+  }
+
+  onBlur() {
+    setTimeout(() => {
+      if (this.isParentPanning()) return
+      if (this.isDragging()) {
+        this.textarea()?.nativeElement.focus()
+      } else {
+        this.onSave()
+      }
+    }, 0)
   }
 }

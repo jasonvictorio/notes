@@ -23,6 +23,7 @@
 <div class="note-body">
   @if (isEditing()) {
     <textarea
+      (blur)="onBlur()"
       #textarea
       placeholder="Write here"
       [(ngModel)]="markdownString"

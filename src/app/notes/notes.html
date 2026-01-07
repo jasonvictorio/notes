@@ -13,6 +13,7 @@
   <div class="notes-canvas" [style.transform]="styleTransform()">
     @for (note of notes(); track note.id) {
       <app-note
+        [isParentPanning]="isPanning()"
         animate.enter="enter"
         animate.leave="leave"
         [note]="note"
