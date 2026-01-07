@@ -244,16 +244,15 @@ markdown {
 }
 
 .note:hover {
-  z-index: 2000;
+  z-index: 2000 !important;
 }
 
 .note--edit {
-  z-index: 1000;
+  z-index: 1000 !important;
 }
 
-// NOTE: dodgy class to overule .note:hover specificity
 .note--drag.note--drag {
-  z-index: 3000;
+  z-index: 3000 !important;
 }
 
 @keyframes slideIn {

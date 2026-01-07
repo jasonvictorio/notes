@@ -14,6 +14,7 @@
     @for (note of notes(); track note.id) {
       <app-note
         [isParentPanning]="isPanning()"
+        [style.z-index]="note.z"
         animate.enter="enter"
         animate.leave="leave"
         [note]="note"

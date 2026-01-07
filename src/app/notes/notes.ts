@@ -18,6 +18,7 @@ export type Note = {
   content: string
   x: number
   y: number
+  z: number
 }
 
 export type Offset = { x: number; y: number }
@@ -88,7 +89,13 @@ export class NotesComponent implements OnDestroy {
   }
 
   onUpdate(note: Note) {
-    this.notes.set(this.notes().map((n) => (n.id !== note.id ? n : note)))
+    this.notes.set(
+      this.notes().map((n) =>
+        n.id !== note.id
+          ? { ...n, z: n.z >= note.z ? n.z - 1 : n.z }
+          : { ...note, z: this.notes().length },
+      ),
+    )
     this.saveNotes(this.notes())
   }
 
@@ -98,6 +105,7 @@ export class NotesComponent implements OnDestroy {
       content: '*empty*',
       x: 75 - this.position().x,
       y: 75 - this.position().y,
+      z: this.notes().length,
     }
     this.notes.update((notes) => [...notes, newNote])
   }
