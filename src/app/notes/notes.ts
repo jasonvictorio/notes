@@ -2,6 +2,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop'
 import { isPlatformBrowser } from '@angular/common'
 import {
   Component,
+  ElementRef,
   HostListener,
   type OnDestroy,
   PLATFORM_ID,
@@ -21,7 +22,7 @@ export type Note = {
   z: number
 }
 
-export type Offset = { x: number; y: number }
+export type Position = { x: number; y: number }
 
 @Component({
   selector: 'app-notes',
@@ -43,9 +44,16 @@ export class NotesComponent implements OnDestroy {
   focusedElement?: HTMLElement
   platformId = inject(PLATFORM_ID)
   isBrowser = computed(() => isPlatformBrowser(this.platformId))
+  hostElement = inject(ElementRef)
 
   ngOnInit() {
     this.fetchFromLocalStorage()
+  }
+
+  @HostListener('dblclick', ['$event'])
+  onDoubleClick(event: MouseEvent) {
+    if (event.target !== this.hostElement.nativeElement) return
+    this.onAdd({ x: event.x - 50, y: event.y - 100 })
   }
 
   @HostListener('mousedown', ['$event'])
@@ -73,7 +81,7 @@ export class NotesComponent implements OnDestroy {
     })
   }
 
-  updateStyleOffset({ x, y }: Offset) {
+  updateStyleOffset({ x, y }: Position) {
     this.styleBackgroundPosition.set(`${x}px ${y}px`)
     this.styleTransform.set(`translate(${x}px, ${y}px)`)
   }
@@ -99,12 +107,12 @@ export class NotesComponent implements OnDestroy {
     this.saveNotes(this.notes())
   }
 
-  onAdd() {
+  onAdd({ x, y }: Position = { x: 75, y: 75 }) {
     const newNote = {
       id: nanoid(),
       content: '*empty*',
-      x: 75 - this.position().x,
-      y: 75 - this.position().y,
+      x: x - this.position().x,
+      y: y - this.position().y,
       z: this.notes().length,
     }
     this.notes.update((notes) => [...notes, newNote])
@@ -128,7 +136,7 @@ export class NotesComponent implements OnDestroy {
     this.browserSafe(() => {
       const offsetLocal = JSON.parse(
         localStorage.getItem('position') || '0',
-      ) as Offset
+      ) as Position
       const notesLocal = JSON.parse(
         localStorage.getItem('notes') || '[]',
       ) as Note[]
@@ -144,7 +152,7 @@ export class NotesComponent implements OnDestroy {
     })
   }
 
-  savePosition(offset: Offset) {
+  savePosition(offset: Position) {
     this.browserSafe(() => {
       localStorage.setItem('position', JSON.stringify(offset))
     })

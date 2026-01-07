@@ -1,14 +1,3 @@
-<div class="notes-header" cdkDrag>
-  <h1 class="notes-title">Infinity Notes</h1>
-  <button
-    class="notes-add"
-    type="button"
-    (click)="onAdd()">
-    <span class="material-symbols-outlined icon">add</span>
-    New note
-  </button>
-</div>
-
 @if (isBrowser()) {
   <div class="notes-canvas" [style.transform]="styleTransform()">
     @for (note of notes(); track note.id) {
